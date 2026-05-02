@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>partyClock</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="center">
+        <span style="float: right;">partyClock</span>
+        <nobr><span id="localTZLabel">Device Offset</span> <small><span id="localOffsetLabel"></span></small></nobr>
+        <div style="height: 20px;"></div>
+        <i><span class="displayTime large hhmm" id="localTime"></span><span style="display: inline-block;" class="displayTime medium ss" id="localTimeSec"></span></i>
+        <div style="height: 50px;"></div>
+    </div>
+    <div class="center">
+        <table id="clockContainer"></table>
+    </div>
+
+    <div style="height: 200px;"></div>
+    To-do:
+    <ul>
+        <li>timezone picker</li>
+        <li>localstorage to save pinned timezones</li>
+        <li>analog clock</li>
+    </ul>
+    <script>
+        setLocalTZ();
+        clockTick();
+        addClock("Africa/Casablanca");
+        addClock("Africa/Johannesburg");
+        addClock("Asia/Amman");
+        addClock("Asia/Tehran");
+        addClock("Europe/Astrakhan");
+        addClock("Asia/Kabul");
+        addClock("Asia/Almaty");
+        addClock("Asia/Kolkata");
+        addClock("Asia/Kathmandu");
+        addClock("Asia/Bishkek");
+        addClock("Asia/Yangon");
+        addClock("Asia/Bangkok");
+        addClock("Asia/Hong_Kong");
+        addClock("Australia/Eucla");
+        addClock("Asia/Chita");
+        addClock("Australia/Darwin");
+        addClock("Australia/Brisbane");
+        addClock("Australia/Lord_Howe");
+        addClock("Pacific/Bougainville");
+        addClock("Asia/Anadyr");
+        addClock("Pacific/Chatham");
+        addClock("Pacific/Niue");
+        addClock("Pacific/Honolulu");
+        addClock("Pacific/Gambier");
+        addClock("Pacific/Pitcairn");
+        addClock("America/Los_Angeles");
+        addClock("America/Belize");
+        addClock("America/Bogota");
+        addClock("America/Barbados");
+        addClock("America/Araguaina");
+        addClock("America/Noronha");
+        addClock("Atlantic/Cape_Verde");
+        
+
+        // addClock("etc/UTC");
+        // addClock("Europe/Paris");
+        // addClock("Europe/London");
+        // addClock("America/New_York");
+        // addClock("America/Chicago");
+        // addClock("US/Alaska");
+        // addClock("Pacific/Chatham");
+        // addClock("Asia/Tokyo");
+        // addClock("Asia/Calcutta");
+        </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+@font-face {
+    font-family: "Monopix";
+    src: url(/fonts/monopix.otf) format("opentype");
+}
+@font-face {
+    font-family: "Segris 16";
+    src: url(/fonts/segris-16.otf) format("opentype");
+    size-adjust: 72%;
+}
+
+:root {
+    --bg-l: #fff;
+    --bg-d: #000;
+    --text-l: #000;
+    --text-d: #fff;
+    --grad-l: #fff6;
+    --grad-d: #0008;
+    --list-zebra-l: #4441;
+    --list-zebra-d: #ccc2;
+    --visDivider-l: #0002;
+    --visDivider-d: #fff2;
+    --visDay-l: #ffc;
+    --visDay-d: #551;
+    --visNight-l: #99e;
+    --visNight-d: #003;
+
+    --bg: var(--bg-l);
+    --text: var(--text-l);
+    --grad: var(--grad-l);
+    --list-zebra: var(--list-zebra-l);
+    --visDivider: var(--visDivider-l);
+    --visDay: var(--visDay-l);
+    --visNight: var(--visNight-l);
+
+    /* --bg: var(--bg-d);
+    --grad: var(--grad-d);
+    --list-zebra: var(--list-zebra-d);
+    --visDivider: var(--visDivider-d);
+    --visDay: var(--visDay-d);
+    --visNight: var(--visNight-d);
+    --text: var(--text-d); */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+}
+
+body {
+    background-color: var(--bg);
+    transition: 3s;
+    color: var(--text);
+    font-family: "Monopix";
+    font-size: 20px;
+}
+
+small {
+    opacity: 0.3;
+}
+
+.center {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.displayTime {
+    font-family: "Segris 16";
+    &.large {
+        font-size: 80px;
+    }
+    &.medium {
+        font-size: 50px;
+    }
+    &.hhmmss {
+        &::before {
+            content: "??:??:??";
+            position: absolute;
+            opacity: 0.05;
+        }
+    }
+    &.hhmm {
+        &::before {
+            content: "??:??";
+            position: absolute;
+            opacity: 0.05;
+        }
+    }
+    &.ss {
+        &::before {
+            content: ":??";
+            position: absolute;
+            opacity: 0.05;
+        }
+    }
+}
+
+table {
+    border-collapse: collapse;
+}
+td {
+    vertical-align: middle;
+}
+
+#clockContainer {
+    width: 100%;
+}
+
+.clock {
+    width: 100%;
+    &:nth-child(even) {
+        background-color: var(--list-zebra);
+    }
+    .clockCity {
+        width: 150px;
+        padding-left: 10px;
+    }
+    .clockTime {
+        width: 60px;
+    }
+    .clockAbbr {
+        width: 45px;
+    }
+    .clockHourContainer {
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+        max-width: 100%;
+        padding: 0;
+        mask-image: linear-gradient(90deg, #0000, #ffff 8.333%);
+        &::before {
+            content: " ";
+            height: 100%;
+            width: 8.333%;
+            position: absolute;
+            background-color: var(--grad);
+            border-right: 1px dashed var(--text);
+            z-index: 2;
+            backdrop-filter: blur(2px);
+        }
+    }
+    .clockHours {
+        width: 300%;
+        table-layout: fixed;
+        background-image: linear-gradient(90deg, var(--visNight), var(--visDay), var(--visNight), var(--visDay));
+    }
+    .clockHour {
+        height: 60px;
+        text-align: center;
+        overflow: hidden;
+        &:not(:last-child) {
+            border-right: 1px solid var(--visDivider);
+        }
+        &:nth-child(24n) {
+            border-right-color: var(--visDay);
+        }
+        &:nth-child(24n-12) {
+            border-right-color: var(--visNight);
+        }
+    }
+}
