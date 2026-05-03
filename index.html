@@ -9,69 +9,93 @@
 </head>
 <body>
     <div class="center">
-        <span style="float: right;">partyClock</span>
-        <nobr><span id="localTZLabel">Device Offset</span> <small><span id="localOffsetLabel"></span></small></nobr>
-        <div style="height: 20px;"></div>
-        <i><span class="displayTime large hhmm" id="localTime"></span><span style="display: inline-block;" class="displayTime medium ss" id="localTimeSec"></span></i>
-        <div style="height: 50px;"></div>
-    </div>
-    <div class="center">
+        <div id="banner">
+            <span style="float: right;">clock.<a href="https://aivi.party/">aivi.party</a></span>
+            <nobr><span id="localTZLabel">Device Offset</span> <small><span id="localOffsetLabel"></span></small></nobr>
+            <div>
+                <table>
+                    <tr>
+                        <td style="background-color: var(--bg);">
+                            <nobr><i><span class="displayTime large hhmm" id="localTime"></span><span style="display: inline-block;" class="displayTime medium ss" id="localTimeSec"></span></i></nobr>
+                        </td>
+                        <td style="text-align: right; width: 120px; padding: 5px 15px;">
+                            <small><nobr><span class="">24h</span> <span class="unselected">12h</span></nobr><br><nobr><span class="unselected">light</span> <span class="unselected">dark</span> <span class="">auto</span></nobr><br><nobr><span class="">digital</span> <span class="unselected">analog</span></nobr></small>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div style="height: 30px;"></div>
+        <table>
+            <tr>
+                <td>
+                    <span><small>IANA timezone</small></span>
+                    <br>
+                    <input id="tzInput" name="tz" placeholder="Search">
+                    <button type="button" onclick="addClock(document.getElementById('tzInput').value);">+ Add</button>
+                </td>
+            </tr>
+        </table>
+        <div style="height: 30px;"></div>
         <table id="clockContainer"></table>
     </div>
-
     <div style="height: 200px;"></div>
     To-do:
     <ul>
         <li>timezone picker</li>
+        <li>share timezone by link</li>
         <li>localstorage to save pinned timezones</li>
         <li>analog clock</li>
     </ul>
     <script>
         setLocalTZ();
         clockTick();
-        addClock("Africa/Casablanca");
-        addClock("Africa/Johannesburg");
-        addClock("Asia/Amman");
-        addClock("Asia/Tehran");
-        addClock("Europe/Astrakhan");
-        addClock("Asia/Kabul");
-        addClock("Asia/Almaty");
-        addClock("Asia/Kolkata");
-        addClock("Asia/Kathmandu");
-        addClock("Asia/Bishkek");
-        addClock("Asia/Yangon");
-        addClock("Asia/Bangkok");
-        addClock("Asia/Hong_Kong");
-        addClock("Australia/Eucla");
-        addClock("Asia/Chita");
-        addClock("Australia/Darwin");
-        addClock("Australia/Brisbane");
-        addClock("Australia/Lord_Howe");
-        addClock("Pacific/Bougainville");
-        addClock("Asia/Anadyr");
-        addClock("Pacific/Chatham");
-        addClock("Pacific/Niue");
-        addClock("Pacific/Honolulu");
-        addClock("Pacific/Gambier");
-        addClock("Pacific/Pitcairn");
-        addClock("America/Los_Angeles");
-        addClock("America/Belize");
-        addClock("America/Bogota");
-        addClock("America/Barbados");
-        addClock("America/Araguaina");
-        addClock("America/Noronha");
-        addClock("Atlantic/Cape_Verde");
-        
-
-        // addClock("etc/UTC");
-        // addClock("Europe/Paris");
-        // addClock("Europe/London");
-        // addClock("America/New_York");
-        // addClock("America/Chicago");
-        // addClock("US/Alaska");
+        // addClock("Africa/Casablanca");
+        // addClock("Africa/Johannesburg");
+        // addClock("Asia/Amman");
+        // addClock("Asia/Tehran");
+        // addClock("Europe/Astrakhan");
+        // addClock("Asia/Kabul");
+        // addClock("Asia/Almaty");
+        // addClock("Asia/Kolkata");
+        // addClock("Asia/Kathmandu");
+        // addClock("Asia/Bishkek");
+        // addClock("Asia/Yangon");
+        // addClock("Asia/Bangkok");
+        // addClock("Asia/Hong_Kong");
+        // addClock("Australia/Eucla");
+        // addClock("Asia/Chita");
+        // addClock("Australia/Darwin");
+        // addClock("Australia/Brisbane");
+        // addClock("Australia/Lord_Howe");
+        // addClock("Pacific/Bougainville");
+        // addClock("Asia/Anadyr");
         // addClock("Pacific/Chatham");
+        // addClock("Pacific/Niue");
+        // addClock("Pacific/Honolulu");
+        // addClock("Pacific/Gambier");
+        // addClock("Pacific/Pitcairn");
+        // addClock("America/Los_Angeles");
+        // addClock("America/Belize");
+        // addClock("America/Bogota");
+        // addClock("America/Barbados");
+        // addClock("America/Araguaina");
+        // addClock("America/Noronha");
+        // addClock("Atlantic/Cape_Verde");
+        
+        // addClock("Pacific/Honolulu");
+        // addClock("US/Alaska");
+        // addClock("America/Los_Angeles");
+        // addClock("America/Chicago");
+        addClock("America/New_York");
+        // addClock("Atlantic/Cape_Verde");
+        addClock("etc/UTC");
+        // addClock("Europe/London");
+        // addClock("Europe/Paris");
+        // addClock("Asia/Kabul");
+        // addClock("Asia/Kolkata");
+        // addClock("Asia/Shanghai");
         // addClock("Asia/Tokyo");
-        // addClock("Asia/Calcutta");
-        </script>
+    </script>
 </body>
 </html>

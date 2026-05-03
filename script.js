@@ -9,19 +9,36 @@ const nonstandardTZs = [
     ["Eastern Indonesia Time", "WIT"],
     ["Central Indonesia Time", "WITA"]
 ];
+let clockTZs = [];
 var localTZ;
+
+function isRealTZ(TZName) {
+    try {
+        const testFormatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: TZName,
+        });
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
 
 function setLocalTZ() {
     const now = new Date();
     // getTimezoneOffset is inverted
-    let localOffset = now.getTimezoneOffset() / -60;
-    if (localOffset >= 0) {
-        localOffset = "+" + localOffset;
+    let localOffsetHours = now.getTimezoneOffset() / -60;
+    let localOffsetFrac = localOffsetHours % 1;
+    localOffsetHours -= localOffsetFrac;
+    if (localOffsetHours >= 0) {
+        localOffsetHours = "+" + localOffsetHours;
     }
-    const localAbbreviation = now.toLocaleTimeString('en-us',{timeZoneName:'short'}).split(' ')[2];
-    document.getElementById("localOffsetLabel").innerText = localAbbreviation + " • UTC" + localOffset + "";
-    // get Intl TZ and clean up formatting
+    if (localOffsetFrac != 0) {
+        localOffsetHours += ":" + Math.abs(localOffsetFrac) * 60;
+    }
     localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const localAbbreviation = TZtoAbbr(localTZ);
+    document.getElementById("localOffsetLabel").innerText = localAbbreviation + " • UTC" + localOffsetHours + "";
+    // get Intl TZ and clean up formatting
     const localTZPretty = localTZ.replaceAll("_", " ");
     document.getElementById("localTZLabel").innerText = localTZPretty;
 }
@@ -51,7 +68,6 @@ function TZtoAbbr(TZName) {
     });
     const formattedOffset = formatter.formatToParts().find(part => part.type === 'timeZoneName').value;
     // first check database for nonstandard abbreviations
-    console.log(formattedOffset);
     for (let i = 0; i < nonstandardTZs.length; i++) {
         if (formattedOffset == nonstandardTZs[i][0]) {
             return nonstandardTZs[i][1];
@@ -75,13 +91,24 @@ function TZtoCity(TZName) {
     return TZName.split("/")[1].replaceAll("_", " ");
 }
 
-let clockTZs = [];
-
 function addClock(timeZone) {
+    if (!isRealTZ(timeZone)) {
+        return;
+    }
+    document.getElementById("tzInput").value = "";
     clockTZs.push(timeZone);
     const newClock = document.createElement("tr");
     newClock.classList.add("clock");
-    let constructContent = '<td class="clockCity">' + TZtoCity(timeZone) + '</td><td class="clockTime displayTime hhmm">00:00</td><td class="clockAbbr"><small>' + TZtoAbbr(timeZone) + '</small></td><td class="clockHourContainer"><table class="clockHours"><tr>';
+    let clockLocalOffsetHours = (TZtoOffset(timeZone) - TZtoOffset(localTZ)) / 3600;
+    let clockLocalOffsetFrac = clockLocalOffsetHours % 1;
+    clockLocalOffsetHours -= clockLocalOffsetFrac;
+    if (clockLocalOffsetHours >= 0) {
+        clockLocalOffsetHours = "+" + clockLocalOffsetHours;
+    }
+    if (clockLocalOffsetFrac != 0) {
+        clockLocalOffsetHours += ":" + Math.abs(clockLocalOffsetFrac) * 60;
+    }
+    let constructContent = '<td class="clockCity">' + TZtoCity(timeZone) + '</td><td class="clockOffset"><small>' + clockLocalOffsetHours + '</small></td><td class="clockTime displayTime hhmm">00:00</td><td class="clockAbbr"><small>' + TZtoAbbr(timeZone) + '</small></td><td class="clockHourContainer"><table class="clockHours"><tr>';
     const clockHourVisualWidth = 100 / 36;
     for (let i = 0; i < 36; i++) {
         constructContent += '<td class="clockHour displayTime" style="width: ' + clockHourVisualWidth + '%;">' + i % 24 + '</td>';
@@ -107,7 +134,7 @@ function updateClocks() {
         const clock = document.querySelectorAll(".clockHours")[i];
         const clockTime = document.querySelectorAll(".clockTime")[i];
         const offset = TZtoOffset(clockTZs[i]);
-        clock.style.translate = (66.66667 / 86400 * (UTC + offset - (1 * 3600) + 86400)) % (66.66667) * -1 + "%";
+        clock.style.translate = (66.6667 / 86400 * (UTC + offset - (1 * 3600) + 86400)) % (66.6667) * -1 + "%";
         clockTime.innerHTML = formatter.format(now);
     }
 }
@@ -119,6 +146,7 @@ function updateTheme() {
     if (hour >= 6 && hour < 18) {
         root.style.setProperty('--bg', 'var(--bg-l)');
         root.style.setProperty('--text', 'var(--text-l)');
+        root.style.setProperty('--ui', 'var(--ui-l)');
         root.style.setProperty('--grad', 'var(--grad-l)');
         root.style.setProperty('--list-zebra', 'var(--list-zebra-l)');
         root.style.setProperty('--visDivider', 'var(--visDivider-l)');
@@ -127,6 +155,7 @@ function updateTheme() {
     } else {
         root.style.setProperty('--bg', 'var(--bg-d)');
         root.style.setProperty('--text', 'var(--text-d)');
+        root.style.setProperty('--ui', 'var(--ui-d)');
         root.style.setProperty('--grad', 'var(--grad-d)');
         root.style.setProperty('--list-zebra', 'var(--list-zebra-d)');
         root.style.setProperty('--visDivider', 'var(--visDivider-d)');
