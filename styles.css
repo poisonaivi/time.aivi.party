@@ -22,9 +22,11 @@
     --visDivider-l: #0002;
     --visDivider-d: #fff2;
     --visDay-l: #ff8;
-    --visDay-d: #551;
+    --visDay-d: #661;
     --visNight-l: #88f;
-    --visNight-d: #003;
+    --visNight-d: #004;
+    --displayTime-bg-l: 0.075;
+    --displayTime-bg-d: 0.125;
 
     --bg: var(--bg-l);
     --text: var(--text-l);
@@ -34,6 +36,11 @@
     --visDivider: var(--visDivider-l);
     --visDay: var(--visDay-l);
     --visNight: var(--visNight-l);
+    --displayTime-bg: var(--displayTime-bg-l);
+
+    --transition: cubic-bezier(0.19, 1, 0.22, 1);
+    --transition-dur: 500ms;
+    -webkit-text-size-adjust: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -42,18 +49,26 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
     background-color: var(--bg);
-    /* transition: 3s; */
     color: var(--text);
     font-family: "Monopix";
     font-size: 20px;
+    transition: var(--transition) var(--transition-dur);
+}
+img {
+    image-rendering: pixelated;
+    &.icon {
+        height: 16px;
+        translate: 0 2px;
+    }
 }
 
 small {
-    opacity: 0.3;
+    opacity: 0.4;
 }
 a {
     color: var(--text);
     text-decoration: 1px dashed underline;
+    transition: var(--transition) var(--transition-dur);
 }
 
 .center {
@@ -69,25 +84,25 @@ a {
     &.medium {
         font-size: 50px;
     }
-    &.hhmmss {
-        &::before {
-            content: "??:??:??";
-            position: absolute;
-            opacity: 0.05;
-        }
-    }
     &.hhmm {
         &::before {
             content: "??:??";
             position: absolute;
-            opacity: 0.05;
+            color: var(--list-zebra);
         }
     }
     &.ss {
         &::before {
             content: ":??";
             position: absolute;
-            opacity: 0.05;
+            color: var(--list-zebra);
+        }
+    }
+    &.sspp {
+        &::before {
+            content: ":?? ??";
+            position: absolute;
+            color: var(--list-zebra);
         }
     }
 }
@@ -98,19 +113,19 @@ table {
 td {
     vertical-align: middle;
 }
-input, button {
-    height: 35px;
+input, button, .notification {
     box-sizing: border-box;
+    padding: 5px 10px;
     font-size: 20px;
     font-family: Monopix;
     border-radius: 10px;
     color: var(--text);
     position: relative;
     background: var(--bg);
+    transition: var(--transition) var(--transition-dur);
 }
 input {
     width: 250px;
-    padding: 0 10px;
     border: 1px solid var(--ui);
     z-index: 2;
     &::placeholder {
@@ -118,12 +133,12 @@ input {
     }
 }
 button {
-    padding: 0 15px;
+    padding: 5px 15px;
     border: 1px dashed var(--ui);
     box-shadow: inset 0 0 0 var(--ui), 0 0 0 var(--ui);
     z-index: 1;
     cursor: pointer;
-    transition: ease-out 40ms;
+    transition: var(--transition) var(--transition-dur), box-shadow var(--transition) 120ms;
     &:hover {
         box-shadow: inset 0 0 0 var(--ui), 0 0 10px var(--ui);
     }
@@ -132,12 +147,21 @@ button {
     }
 }
 
+.action {
+    cursor: pointer;
+    transition: var(--transition) var(--transition-dur);
+}
+
 #banner {
     background-color: var(--list-zebra);
     padding: 8px 15px 15px;
     border-radius: 10px;
     div {
         margin: 8px -10px -10px;
+    }
+    .bigClockContainer {
+        background-color: var(--bg);
+        transition: var(--transition) var(--transition-dur);
     }
     table {
         width: 100%;
@@ -162,23 +186,34 @@ button {
 .clock {
     width: 100%;
     white-space: nowrap;
+    transition: var(--transition) var(--transition-dur);
     &:nth-child(odd) {
         background-color: var(--list-zebra);
     }
+    .listEnd {
+        border-radius: 10px 0 0 10px;
+        width: 10px
+    }
+    .clockEdit {
+        transition: inherit;
+        max-width: 0px;
+        min-width: 0px;
+        overflow: hidden;
+        filter: opacity(0) blur(10px);
+    }
     .clockCity {
         width: fit-content;
-        padding-left: 15px;
-        border-radius: 10px 0 0 10px;
     }
     .clockOffset {
         width: fit-content;
         text-align: right;
-        padding-left: 20px;
+        padding-left: 15px;
     }
     .clockTime {
         width: fit-content;
         padding-left: 5px;
         font-style: italic;
+        text-align: center;
     }
     .clockAbbr {
         width: fit-content;
@@ -212,6 +247,8 @@ button {
         text-align: left;
         padding-left: 5px;
         overflow: hidden;
+        max-width: 2.7778%;
+        min-width: 2.7778%;
         &:not(:last-child) {
             border-right: 1px solid var(--visDivider);
         }
@@ -221,5 +258,32 @@ button {
         &:nth-child(24n-12) {
             border-right-color: var(--visNight);
         }
+    }
+}
+
+#notificationContainer {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.notification {
+    border: 1px solid var(--ui);
+    width: fit-content;
+    opacity: 0;
+    transition: var(--transition) var(--transition-dur);
+    &:not(:first-child) {
+        margin-top: 5px;
+    }
+    &.dangerNotification {
+        background-color: #f003;
+        border-color: #f00;
+    }
+    &.warningNotification {
+        background-color: #ff02;
+        border-color: #cc0;
+    }
+    &.successNotification {
+        background-color: #0f03;
+        border-color: #0c0;
     }
 }

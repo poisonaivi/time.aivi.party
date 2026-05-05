@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
     <title>partyClock</title>
     <script src="script.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -10,16 +10,16 @@
 <body>
     <div class="center">
         <div id="banner">
-            <span style="float: right;">clock.<a href="https://aivi.party/">aivi.party</a></span>
+            <span style="float: right;">time.<a href="https://aivi.party/">aivi.party</a></span>
             <nobr><span id="localTZLabel">Device Offset</span> <small><span id="localOffsetLabel"></span></small></nobr>
             <div>
                 <table>
                     <tr>
-                        <td style="background-color: var(--bg);">
+                        <td class="bigClockContainer">
                             <nobr><i><span class="displayTime large hhmm" id="localTime"></span><span style="display: inline-block;" class="displayTime medium ss" id="localTimeSec"></span></i></nobr>
                         </td>
                         <td style="text-align: right; width: 120px; padding: 5px 15px;">
-                            <small><nobr><span class="">24h</span> <span class="unselected">12h</span></nobr><br><nobr><span class="unselected">light</span> <span class="unselected">dark</span> <span class="">auto</span></nobr><br><nobr><span class="">digital</span> <span class="unselected">analog</span></nobr></small>
+                            <small><nobr><span class="action hours" onclick="updateHours(12)">12h</span> <span class="unselected hours action" onclick="updateHours(24)">24h</span></nobr><br><nobr><span class="unselected theme action" onclick="updateTheme('light')">light</span> <span class="unselected theme action" onclick="updateTheme('dark')">dark</span> <span class="theme action" onclick="updateTheme('auto')">auto</span></nobr><br><nobr><span class="action">digital</span> <span class="unselected action"><s>analog</s></span></nobr></small>
                         </td>
                     </tr>
                 </table>
@@ -29,73 +29,35 @@
         <table>
             <tr>
                 <td>
-                    <span><small>IANA timezone</small></span>
-                    <br>
-                    <input id="tzInput" name="tz" placeholder="Search">
-                    <button type="button" onclick="addClock(document.getElementById('tzInput').value);">+ Add</button>
+                    <form onsubmit="addClock(document.getElementById('tzInput').value.replaceAll(' ', '_')); return false;">
+                        <label for="tz"><small>IANA timezone identifier</small></label>
+                        <br>
+                        <input name="tz" id="tzInput" placeholder="Search">
+                        <button type="submit">+ Add</button>
+                        <div id="notificationContainer"></div>
+                    </form>
                 </td>
             </tr>
         </table>
         <div style="height: 30px;"></div>
+        <div style="text-align: left;"><small><span class="action" onclick="toggleEdit();">edit</span>&nbsp;&nbsp;<span class="action" onclick="removeAllClocks();">clear</span>&nbsp;&nbsp;<span class="action" onclick="storeTZs();">save</span>&nbsp;&nbsp;<span class="action" onclick="retrieveTZs()">load</span>&nbsp;&nbsp;<span class="action" onclick="clearTZs();">forget</span></small></div>
         <table id="clockContainer"></table>
+        <div style="text-align: left;"><small><span class="action" onclick="toggleEdit();">edit</span>&nbsp;&nbsp;<span class="action" onclick="removeAllClocks();">clear</span>&nbsp;&nbsp;<span class="action" onclick="storeTZs();">save</span>&nbsp;&nbsp;<span class="action" onclick="retrieveTZs()">load</span>&nbsp;&nbsp;<span class="action" onclick="clearTZs();">forget</span></small></div>
     </div>
     <div style="height: 200px;"></div>
+    
     To-do:
     <ul>
         <li>timezone picker</li>
         <li>share timezone by link</li>
-        <li>localstorage to save pinned timezones</li>
         <li>analog clock</li>
     </ul>
     <script>
         setLocalTZ();
         clockTick();
-        // addClock("Africa/Casablanca");
-        // addClock("Africa/Johannesburg");
-        // addClock("Asia/Amman");
-        // addClock("Asia/Tehran");
-        // addClock("Europe/Astrakhan");
-        // addClock("Asia/Kabul");
-        // addClock("Asia/Almaty");
-        // addClock("Asia/Kolkata");
-        // addClock("Asia/Kathmandu");
-        // addClock("Asia/Bishkek");
-        // addClock("Asia/Yangon");
-        // addClock("Asia/Bangkok");
-        // addClock("Asia/Hong_Kong");
-        // addClock("Australia/Eucla");
-        // addClock("Asia/Chita");
-        // addClock("Australia/Darwin");
-        // addClock("Australia/Brisbane");
-        // addClock("Australia/Lord_Howe");
-        // addClock("Pacific/Bougainville");
-        // addClock("Asia/Anadyr");
-        // addClock("Pacific/Chatham");
-        // addClock("Pacific/Niue");
-        // addClock("Pacific/Honolulu");
-        // addClock("Pacific/Gambier");
-        // addClock("Pacific/Pitcairn");
-        // addClock("America/Los_Angeles");
-        // addClock("America/Belize");
-        // addClock("America/Bogota");
-        // addClock("America/Barbados");
-        // addClock("America/Araguaina");
-        // addClock("America/Noronha");
-        // addClock("Atlantic/Cape_Verde");
-        
-        // addClock("Pacific/Honolulu");
-        // addClock("US/Alaska");
-        // addClock("America/Los_Angeles");
-        // addClock("America/Chicago");
-        addClock("America/New_York");
-        // addClock("Atlantic/Cape_Verde");
-        addClock("etc/UTC");
-        // addClock("Europe/London");
-        // addClock("Europe/Paris");
-        // addClock("Asia/Kabul");
-        // addClock("Asia/Kolkata");
-        // addClock("Asia/Shanghai");
-        // addClock("Asia/Tokyo");
+        retrieveTZs();
+        updateTheme();
+        updateHours();
     </script>
 </body>
 </html>
