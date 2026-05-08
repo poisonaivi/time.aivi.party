@@ -466,12 +466,14 @@ function notify(type, message) {
     document.getElementById("notificationContainer").appendChild(newNotification);
     const notifications = document.querySelectorAll(".notification");
     const currentNotification = notifications[notifications.length - 1];
-    currentNotification.style.opacity = 1;
     setTimeout(() => {
-        currentNotification.style.opacity = 0;
-        currentNotification.style.translate = "0 -100%";
+        currentNotification.style.opacity = 1;
         setTimeout(() => {
-            currentNotification.remove();
-        }, 500);
-    }, 3000);
+            currentNotification.style.opacity = 0;
+            currentNotification.style.translate = "0 -50%";
+            setTimeout(() => {
+                currentNotification.remove();
+            }, 500);
+        }, 3000);
+    }, 0);
 }
