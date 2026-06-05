@@ -151,7 +151,7 @@ function TZtoCity(TZName) {
 
 function storeTZs() {
     localStorage.setItem("storedClockTZs", JSON.stringify(clockTZs));
-    notify("success", "List saved to memory.")
+    notify("success", "List saved.")
 }
 
 function retrieveTZs() {
@@ -243,7 +243,7 @@ function moveClock(direction, index) {
     const clockToMove = document.querySelector(".clock:nth-child(" + (index + 1) + ")");
     if (direction == -1) {
         if (index == 0) {
-            notify("warning", "Can't move first item up.");
+            notify("warning", "Can't move the first item up.");
             return;
         }
         const clockToSwap = document.querySelector(".clock:nth-child(" + (index) + ")")
@@ -251,7 +251,7 @@ function moveClock(direction, index) {
         clockToSwap.style.translate = "0 100%";        
     } else if (direction == 1) {
         if (index == clockTZs.length - 1) {
-            notify("warning", "Can't move last item down.");
+            notify("warning", "Can't move the last item down.");
             return;
         }
         const clockToSwap = document.querySelector(".clock:nth-child(" + (index + 2) + ")")
@@ -282,11 +282,12 @@ function clearAllClocks() {
 }
 
 function removeAllClocks() {
+    clearParams();
     for (let clock = 0; clock < clockTZs.length; clock++) {
         removeClock(clock);
     }
     clockTZs.length = 0;
-    notify("success", "List cleared.");
+    notify("success", "List cleared. Click 'Load' to restore.");
 }
 
 
@@ -454,6 +455,30 @@ function clockTick() {
 	setTimeout("clockTick()", 1000 - milliseconds % 1000 );
 }
 
+function openSharedTZs() {
+    const urlString = window.location.href;
+    let url = new URL(urlString);
+    let params = decodeURIComponent(url.searchParams.get("tz"))
+    if (!["null", null, ""].includes(params)) {
+        paramsArr = params.split(" ");
+        if (paramsArr.length == 1) {
+            notify("success", "Added from shared link. Click 'Save' to keep in list.")
+            addClocks(paramsArr);
+        } else {
+            notify("success", "Loaded from shared link. Click 'Load' to restore.")
+            clearAllClocks();
+            addClocks(paramsArr);
+        }
+    }
+}
+
+function clearParams() {
+    const urlString = window.location.href;
+    const url = new URL(urlString);
+    url.searchParams.delete("tz");
+    window.history.pushState("", "", url);
+}
+
 function notify(type, message) {
     const newNotification = document.createElement("div");
     newNotification.classList.add("notification");
@@ -474,6 +499,6 @@ function notify(type, message) {
             setTimeout(() => {
                 currentNotification.remove();
             }, 500);
-        }, 3000);
+        }, 5000);
     }, 0);
 }
